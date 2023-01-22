@@ -12,12 +12,12 @@ public class Attractor : MonoBehaviour, IAttractor
 
     [Tooltip("Satellites orbit speed.\nHigher speed leads to a wider orbit.\nForms actual satellites orbit along with OrbitRadius (magenta).")] 
     public float SpeedScale = 1600;
-    [Tooltip("Shift ot the OrbitRadius(magenta) from the middle between colliders")] 
+    [Tooltip("Shift ot the OrbitRadius (magenta) from the middle between colliders")] 
     public float OrbitDistanceShift = -3f;
     [SerializeField]
     private float effectionRadius = 10;
 
-    // middle radius between _innerCollider and _orbitCollider plus DBG_OrbitDistanceDiff
+    // middle radius between _innerCollider and _orbitCollider plus OrbitDistanceShift
     public float OrbitRadius => ((OrbitCollider.radius + InnerCollider.radius) * transform.localScale.x) / 2f + OrbitDistanceShift;
 
     public IList<ISatellite> Satellites { get; } = new List<ISatellite>();

@@ -7,57 +7,65 @@ using UnityEngine;
 /// </summary>
 public class PlayerActions : NetworkBehaviour
 {
-    public float SpeedScaleMax = 0.2f;
     public float ParticlesConsumingTime = 1f;
-    public Color FinalColor = Color.red;
     public float ParticlesConsumingProgress => ParticlesConsumingTimeProgress / ParticlesConsumingTime;
-    public float ParticlesConsumingTimeProgress { get; private set; }
-    public bool OpenToConsume => ParticlesConsumingProgress > 0.4f;
 
-    private float _startSpeed;
+    [SyncVar(hook = nameof(SetConsumingTimeHook))]
+    public float ParticlesConsumingTimeProgress;
+    public bool IsConsumingInProgress => ParticlesConsumingProgress > ConsumingStartedThreshold;
+
+
+    public void SetConsumingTimeHook(float oldTime, float newTime)
+    {
+        // Debug.Log($"[set progress hook] server: {isServer} | me: {isLocalPlayer} | val = {ParticlesConsumingTimeProgress} => {newTime}");
+        ParticlesConsumingTimeProgress = newTime;
+
+        PlayAnimation();
+    }
+
+    private const float ConsumingStartedThreshold = 0.9f;
+    
     private float _startOrbitShift;
-    private Color _startColor;
     private float _startColliderRadius;
 
-    private float _finalSpeed;
-    private float _finalOrbitShift;
-    private  Color _finalColor;
+    private float _finalOrbitShift => - (((_attractor.OrbitCollider.radius + _attractor.InnerCollider.radius) * transform.localScale.x) / 2f) + 0.1f;
     private float _finalColliderRadius;
     
     private Attractor _attractor;
-    private SpriteRenderer _spriteRenderer;
     private CircleCollider2D _innerCollider;
     private CircleCollider2D _outerCollider;
-
+    private PlayerAnimationController _animator;
+    private Button _eatButton;
+    
     void Start()
     {
         _attractor = GetComponent<Attractor>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         _innerCollider = GetComponents<CircleCollider2D>().Single(x => !x.isTrigger);
+        _animator = GetComponent<PlayerAnimationController>();
         
-        _startSpeed = _attractor.SpeedScale;
         _startOrbitShift = _attractor.OrbitDistanceShift;
-        _startColor = _spriteRenderer.color;
         _startColliderRadius = _innerCollider.radius;
         
-        _finalSpeed = _attractor.SpeedScale * SpeedScaleMax;
-        _finalColor = FinalColor;
         _finalColliderRadius = 0f + 0.01f; // 0.01f - threshold 
-        _finalOrbitShift = _startOrbitShift - 1f;
+        // _finalOrbitShift = _startOrbitShift - 4f;
+        
+        
+        _eatButton = GameObject.FindGameObjectsWithTag("Button")?
+            .SingleOrDefault(x => x.name == "A")
+            ?.GetComponent<Button>();
     }
 
     void Update()
     {
         if (!isLocalPlayer)
             return;
-
-        // TODO: add mobile control
-        if (Input.GetKey(KeyCode.Space))
+        
+        if (Input.GetKey(KeyCode.Space) || _eatButton.IsButtonPressed)
         {
             if (ParticlesConsumingTimeProgress < ParticlesConsumingTime)
             {
                 ParticlesConsumingTimeProgress += Time.deltaTime;
-
+                
                 PlayAnimation();
             }
         }
@@ -71,12 +79,11 @@ public class PlayerActions : NetworkBehaviour
 
     private void PlayAnimation()
     {
-        // TODO: add networking sync
-        
-        _attractor.SpeedScale = Mathf.Lerp(_startSpeed, _finalSpeed, ParticlesConsumingProgress);
-        _attractor.OrbitDistanceShift = Mathf.Lerp(_startOrbitShift, _finalOrbitShift, ParticlesConsumingProgress);
+        // Debug.Log("Consuming progress" + ParticlesConsumingProgress);
 
-        _spriteRenderer.color = Color.Lerp(_startColor, _finalColor, ParticlesConsumingProgress);
+        _animator.SetConsumingProgress(ParticlesConsumingProgress);
+        
+        _attractor.OrbitDistanceShift = Mathf.Lerp(_startOrbitShift, _finalOrbitShift, ParticlesConsumingProgress);
 
         _innerCollider.radius = Mathf.Lerp(_startColliderRadius, _finalColliderRadius, ParticlesConsumingProgress);
     }

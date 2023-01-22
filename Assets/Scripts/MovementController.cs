@@ -10,12 +10,14 @@ public class MovementController : NetworkBehaviour
     private Joystick _joystick;
     private Rigidbody2D _rigidbody2D;
     private Transform _cameraTransform;
+    private PlayerActions _playerActions;
     
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _playerActions = GetComponent<PlayerActions>();
 
-        _joystick = GameObject.FindGameObjectWithTag("Joystick")?.GetComponent<FloatingJoystick>();
+        _joystick = GameObject.FindGameObjectWithTag("Joystick")?.GetComponent<FixedJoystick>();
     }
 
     public override void OnStartLocalPlayer()
@@ -31,6 +33,9 @@ public class MovementController : NetworkBehaviour
     void Update()
     {
         if (!isLocalPlayer)
+            return;
+
+        if (_playerActions.IsConsumingInProgress)
             return;
         
         MoveTarget();

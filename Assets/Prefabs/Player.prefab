@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 6196448442281635449}
   - component: {fileID: 6522504662993188868}
   - component: {fileID: 2326461308440432292}
+  - component: {fileID: 1734059112270705734}
+  - component: {fileID: 8007943879726914562}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -107,7 +109,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 99
+  m_LinearDrag: 10
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -166,7 +168,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.2
+  m_Radius: 1.3
 --- !u!114 &3208328741739492753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +210,7 @@ MonoBehaviour:
   scaleSensitivity: 0.01
   syncPosition: 1
   syncRotation: 1
-  syncScale: 0
+  syncScale: 1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
@@ -227,7 +229,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  SpeedScale: 50000
+  SpeedScale: 5000
   CameraLerpedSpeedScale: 3
 --- !u!114 &6196448442281635449
 MonoBehaviour:
@@ -241,12 +243,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b3a0d1029a02e744914d056ffe58440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0.1
-  SpeedScaleMax: 0.2
-  ParticlesConsumingTime: 1
+  SpeedScaleMax: 1
+  ParticlesConsumingTime: 5
   FinalColor: {r: 1, g: 0, b: 0, a: 1}
+  ParticlesConsumingTimeProgress: 0
 --- !u!114 &6522504662993188868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,6 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb39067a4c80f44a97007cf9bb678d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EatingSpaceScale: 0.32
   Particles: []
 --- !u!114 &2326461308440432292
 MonoBehaviour:
@@ -272,4 +276,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b12bb18564d91d4683867d4597a51d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShootingSpeed: 2
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
+  ShootingSpeed: 2.5
+--- !u!95 &1734059112270705734
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614317523940458564}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d2166f73d28781d48b9cb1c5bb9b9376, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8007943879726914562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614317523940458564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc38930c2d9f414ab0a8d64044487c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1

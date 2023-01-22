@@ -17,8 +17,7 @@ public class ParticlesSpawner : NetworkBehaviour
     }
     #endregion  
 
-    [FormerlySerializedAs("Mass")] public GameObject Particle;
-    public List<GameObject> Players;
+    public GameObject ParticlePrefab;
 
     [FormerlySerializedAs("CreatedMasses")] 
     public List<GameObject> CreatedParticles = new List<GameObject>();
@@ -41,14 +40,24 @@ public class ParticlesSpawner : NetworkBehaviour
         StartCoroutine(CreateMass());
     }
 
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+
+        foreach (var particle in CreatedParticles)
+        {
+            Destroy(particle);
+        }
+
+        CreatedParticles = new List<GameObject>();
+    }
+
     void Start()
     {
-        Players = new List<GameObject>();
-        
         ParentForParticles = GameObject.FindGameObjectWithTag("ParticlesParent");
         if(ParentForParticles == null)
         {
-            Debug.LogError("Particles parent is null. Can't find GameObject with tag - ParticlesParent");
+            Debug.LogWarning("Particles parent is null. Can't find GameObject with tag - ParticlesParent");
         }
     }
 
@@ -61,17 +70,10 @@ public class ParticlesSpawner : NetworkBehaviour
             Vector2 p = new Vector2(Random.Range(-pos.x, pos.x), Random.Range(-pos.y, pos.y));
             p /= 2;
 
-            GameObject particleObject = Instantiate(Particle, p, Quaternion.identity); // parent was removed to sync spawn over network correctly
+            GameObject particleObject = Instantiate(ParticlePrefab, p, Quaternion.identity); // parent was removed to sync spawn over network correctly
             NetworkServer.Spawn(particleObject);
 
             AddMass(particleObject);
-
-            for (int i = 0; i < Players.Count; i++)
-            {
-                ParticlesEater pp = Players[i].GetComponent<ParticlesEater>();
-                pp.AddMass(particleObject);
-
-            }
         }
 
         StartCoroutine(CreateMass());

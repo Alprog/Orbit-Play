@@ -1,68 +1,60 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class ParticlesEater : MonoBehaviour
+public class ParticlesEater : NetworkBehaviour
 {
-    [FormerlySerializedAs("Mass")] public GameObject[] Particles;
+    public float EatingSpaceScale = 0.32f;
+
+    private float EatingRadius => transform.localScale.x * EatingSpaceScale;
+    
     private PlayerActions _playerActions;
+    private Attractor _attractor;
 
     void Start()
     {
         _playerActions = GetComponent<PlayerActions>();
+        _attractor = GetComponent<Attractor>();
         
-        ParticlesSpawner.Instance.Players.Add(gameObject);
-        UpdateMass();
-        InvokeRepeating("CheckMass", 0, 0.1f);
+        if (isLocalPlayer)
+            InvokeRepeating(nameof(CheckMass), 0, 0.1f);
     }
 
-    void UpdateMass()
+    void OnDrawGizmosSelected()
     {
-        Particles = GameObject.FindGameObjectsWithTag("Particle"); 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, EatingRadius);
     }
-
-
-    public void AddMass(GameObject particleObject)
-    {
-        List<GameObject> particlesList = Particles.ToList();
-        particlesList.Add(particleObject);
-        Particles = particlesList.ToArray();
-
-        ParticlesSpawner.Instance.AddMass(particleObject);
-    }
-
-    public void RemoveMass(GameObject particleObject)
-    {
-        List<GameObject> particlesList = Particles.ToList();
-        particlesList.Remove(particleObject);
-        Particles = particlesList.ToArray();
-
-        ParticlesSpawner.Instance.RemoveMass(particleObject);
-    }
-
-    // TODO: fix this shit, it doesn't work
+    
     public void CheckMass()
     {
-        if (!_playerActions.OpenToConsume) return;
+        if (!_playerActions.IsConsumingInProgress) return;
         
-        Debug.Log("CheckMass");
-        foreach (var t in Particles)
+        var particlesToEat = _attractor.Satellites
+            .Select(x => x.GameObject)
+            .Where(x => Vector2.Distance(transform.position, x.transform.position) <= EatingRadius)
+            .ToArray();
+
+
+        foreach (var particle in particlesToEat)
         {
-            Transform m = t.transform;
-            // can be optimized
-            if (Vector2.Distance(transform.position, m.position) <= transform.localScale.x / 4)
-            {
-                RemoveMass(m.gameObject);
-                PlayerEat();
-                Destroy(m.gameObject);
-            }
+            Eat(particle);
         }
     }
 
-    public void PlayerEat()
+    private void Eat(GameObject particle)
     {
-        transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
+        // Debug.Log($"[Eat] server: {isServer} | me: {isLocalPlayer} | scale: {transform.localScale.x}");
+
+        DestroyParticle(particle); // call to server
+        
+        transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+    }
+
+    [Command]
+    private void DestroyParticle(GameObject particle)
+    {
+        ParticlesSpawner.Instance.RemoveMass(particle);
+        Destroy(particle);
     }
 }
