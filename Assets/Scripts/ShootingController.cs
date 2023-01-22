@@ -60,17 +60,10 @@ public class ShootingController : NetworkBehaviour
                     {
                         LookAtMousePosition(Shell);
 
-
-                        Debug.Log("dew - 2");
-
-                        Shell = findedObject;
-        
-                        Shell.GetComponent<SatelliteAnimationController>().SetCharged();
-
                         // SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
                         // if (renderer != null)
                         // {
-                        //     renderer.material.SetInt("_Animated", 1);
+                        //     renderer.material.SetInt("_Animated", 0);
                         // }
 
                         ShootMeteorite(Shell);
@@ -111,11 +104,15 @@ public class ShootingController : NetworkBehaviour
                 {
                     Shell = findedObject;
 
-                    SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
-                    if (renderer != null)
-                    {
-                        renderer.material.SetInt("_Animated", 1);
-                    }
+                    Debug.Log("dew - 2");
+
+                    Shell.GetComponent<SatelliteAnimationController>().SetCharged();
+
+                    //SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
+                    //if (renderer != null)
+                    //{
+                    //    renderer.material.SetInt("_Animated", 1);
+                    //}
                 }
             }
         }
