@@ -60,11 +60,18 @@ public class ShootingController : NetworkBehaviour
                     {
                         LookAtMousePosition(Shell);
 
-                        SpriteRenderer renderer = Shell.GetComponent<SpriteRenderer>();
-                        if (renderer != null)
-                        {
-                            renderer.material.SetInt("_Animated", 0);
-                        }
+
+                        Debug.Log("dew - 2");
+
+                        Shell = findedObject;
+        
+                        Shell.GetComponent<SatelliteAnimationController>().SetCharged();
+
+                        // SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
+                        // if (renderer != null)
+                        // {
+                        //     renderer.material.SetInt("_Animated", 1);
+                        // }
 
                         ShootMeteorite(Shell);
 
@@ -141,6 +148,8 @@ public class ShootingController : NetworkBehaviour
     private void ShootMeteorite_Cmd(GameObject meteorite, Vector2 direction, float shootingForce)
     {
         meteorite.GetComponent<Rigidbody2D>().AddForce(direction * (shootingForce * ShootingSpeed), ForceMode2D.Impulse);
+        
+        meteorite.GetComponent<SatelliteAnimationController>().SetSatellite();
     }
 
     [Command]

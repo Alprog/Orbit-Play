@@ -832,7 +832,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  ParticlePrefab: {fileID: 6939396904949209103, guid: a718cb3ce11bb8148bae93074b4e078f, type: 3}
+  ParticlePrefab: {fileID: 8141041430981586648, guid: 6ed604ad94a237343bc37e3d405cae04, type: 3}
   CreatedParticles: []
   MaxParticles: 50
   TIME_TO_CREATE_PARTICLE: 0.05
@@ -1497,6 +1497,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1176511734571011249, guid: bbd7dc949e0f4f640b69c61cb1cefd12, type: 3}
+      propertyPath: spawnPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176511734571011249, guid: bbd7dc949e0f4f640b69c61cb1cefd12, type: 3}
+      propertyPath: spawnPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 8141041430981586648, guid: 6ed604ad94a237343bc37e3d405cae04, type: 3}
     - target: {fileID: 1176511734571011262, guid: bbd7dc949e0f4f640b69c61cb1cefd12, type: 3}
       propertyPath: m_Name
       value: NetworkManager

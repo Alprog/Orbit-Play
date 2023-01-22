@@ -19,11 +19,15 @@ public class Satellite : MonoBehaviour, ISatellite
 
     private Rigidbody2D _rigidbody2D;
     private LayerMask _initialLayer;
+
+    private SatelliteAnimationController _animationController;
     
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _initialLayer = gameObject.layer;
+
+        _animationController = GetComponent<SatelliteAnimationController>();
     }
 
     void Update()
@@ -44,6 +48,8 @@ public class Satellite : MonoBehaviour, ISatellite
         _currentAttractorRigidbody2D = attractorGameObject.GetComponent<Rigidbody2D>();
         
         gameObject.layer = LayerMask.NameToLayer("Default");
+        
+        _animationController.SetSatellite();
     }   
 
     public void Detach()
@@ -56,6 +62,8 @@ public class Satellite : MonoBehaviour, ISatellite
         IsOnOrbit = false;
 
         gameObject.layer = _initialLayer;
+        
+        _animationController.SetIdle();
     }
 
     public void UpdateOrbitalMovement()
@@ -89,8 +97,8 @@ public class Satellite : MonoBehaviour, ISatellite
             // - 1f to inf  - when satellite is farther than $orbitRadius.
             float stabilizer = Vector3.Distance(attractorPosition, satellitePosition) / orbitRadius;
 
-            Vector2 directionClockwise = transform.up * (1f / Mathf.Sqrt(stabilizer));
-            Vector2 directionToAttractor =transform.right;
+            Vector2 directionClockwise = transform.right * (1f / Mathf.Sqrt(stabilizer));
+            Vector2 directionToAttractor =transform.up;
                 
 
             finalForce = (directionToAttractor + directionClockwise) * (speedScale * Time.deltaTime);
@@ -104,7 +112,7 @@ public class Satellite : MonoBehaviour, ISatellite
         }
         
         // rotate to "look" on the attractor
-        transform.right = attractorPosition - satellitePosition;
+        transform.up = attractorPosition - satellitePosition;
 
         // move
         _rigidbody2D.AddForce(finalForce);
