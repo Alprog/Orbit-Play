@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class ShootingController : NetworkBehaviour
 {
-    const int NullUserTouchId = -1;
-
-
-
+    [Header("Shooting Settings")]
     public float ShootingSpeed = 2f;
 
     private GameObject Shell;
@@ -16,7 +13,7 @@ public class ShootingController : NetworkBehaviour
 
     private GameObject _joystick;
 
-    private int _uniqueUserTouchId = NullUserTouchId;
+    private int _uniqueUserTouchId = Constants.NullUserTouchId;
 
     private void Start()
     {
@@ -60,34 +57,15 @@ public class ShootingController : NetworkBehaviour
                     {
                         LookAtMousePosition(Shell);
 
-                        // SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
-                        // if (renderer != null)
-                        // {
-                        //     renderer.material.SetInt("_Animated", 0);
-                        // }
-
                         ShootMeteorite(Shell);
 
                         Shell = null;
-                        _uniqueUserTouchId = NullUserTouchId;
+                        _uniqueUserTouchId = Constants.NullUserTouchId;
                     }
                 }
 
             }
         }
-
-            
-
-        //Remove it now, rotation change gravity force
-
-        ////Hold mouse button down
-        //else if (Input.GetKey(KeyCode.Mouse0))
-        //{
-        //    if (Shell != null)
-        //    {
-        //        LookAtMousePosition(Shell);
-        //    }
-        //}
     }
 
     private void SelectAsteroid()
@@ -107,17 +85,11 @@ public class ShootingController : NetworkBehaviour
                     Debug.Log("dew - 2");
 
                     Shell.GetComponent<SatelliteAnimationController>().SetCharged();
-
-                    //SpriteRenderer renderer = findedObject.GetComponent<SpriteRenderer>();
-                    //if (renderer != null)
-                    //{
-                    //    renderer.material.SetInt("_Animated", 1);
-                    //}
                 }
             }
         }
     }
-    
+
     private void ShootMeteorite(GameObject meteorite)
     {
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(meteorite.transform.position);
@@ -175,7 +147,10 @@ public class ShootingController : NetworkBehaviour
 
         return null;
     }
-
+    /// <summary>
+    /// Get GameObject near mouse position on screen.
+    /// </summary>
+    /// <returns></returns>
     private GameObject MousePositionToNearestSatellite()
     {
         Vector3 mouseWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -192,24 +167,14 @@ public class ShootingController : NetworkBehaviour
 
         return nearestSatellite?.satellite?.GameObject;
     }
-
-    private bool IsClickInJoystickRect()
-    {
-        var imgRectTransform = _joystick.GetComponent<RectTransform>();
-
-        Vector2 localMousePosition = Input.mousePosition;//imgRectTransform.InverseTransformPoint(Input.mousePosition);
-        if (imgRectTransform.rect.Contains(localMousePosition))
-        {
-            return true;
-        }
-        return false;
-    }
-
+    /// <summary>
+    /// Check object is in JoystickRect on the screen.
+    /// </summary>
     private bool IsTouchInJoystickRect(Touch touch)
     {
         var imgRectTransform = _joystick.GetComponent<RectTransform>();
 
-        Vector2 localMousePosition = touch.position;//imgRectTransform.InverseTransformPoint(Input.mousePosition);
+        Vector2 localMousePosition = touch.position;
         if (imgRectTransform.rect.Contains(localMousePosition))
         {
             return true;

@@ -8,10 +8,10 @@ namespace interfaces
         public IAttractor CurrentAttractor { get; set; }
         
         // call only from attractor script!
-        public void Attach(IAttractor attractor);
+        public void AttachAttractor(IAttractor attractor);
 
         // call only from attractor script!
-        public void Detach();
+        public void DetachAttractor();
 
         public void UpdateOrbitalMovement();
     }

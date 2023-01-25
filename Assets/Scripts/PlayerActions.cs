@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerActions : NetworkBehaviour
 {
+    [Header("Player Action Settings")]
     public float ParticlesConsumingTime = 1f;
     public float ParticlesConsumingProgress => ParticlesConsumingTimeProgress / ParticlesConsumingTime;
 
@@ -45,8 +46,10 @@ public class PlayerActions : NetworkBehaviour
         
         _startOrbitShift = _attractor.OrbitDistanceShift;
         _startColliderRadius = _innerCollider.radius;
+
+        float _finalColliderRadiusThreshold = 0.01f;
         
-        _finalColliderRadius = 0f + 0.01f; // 0.01f - threshold 
+        _finalColliderRadius = 0f + _finalColliderRadiusThreshold;
         // _finalOrbitShift = _startOrbitShift - 4f;
         
         

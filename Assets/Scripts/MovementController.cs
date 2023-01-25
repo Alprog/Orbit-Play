@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MovementController : NetworkBehaviour
 {
+    [Header("Camera Settings")]
     public float SpeedScale = 10f;
     public float CameraLerpedSpeedScale = 3f;
 

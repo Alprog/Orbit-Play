@@ -834,9 +834,9 @@ MonoBehaviour:
   syncInterval: 0.1
   ParticlePrefab: {fileID: 8141041430981586648, guid: 6ed604ad94a237343bc37e3d405cae04, type: 3}
   CreatedParticles: []
-  MaxParticles: 50
+  MaxParticlesCount: 50
   TIME_TO_CREATE_PARTICLE: 0.05
-  pos: {x: 170, y: 80}
+  CenterSpawnPosition: {x: 170, y: 80}
 --- !u!4 &1196234473
 Transform:
   m_ObjectHideFlags: 0

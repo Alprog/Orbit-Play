@@ -43,10 +43,7 @@ public class Attractor : MonoBehaviour, IAttractor
     public GameObject GetGameObject() => this.gameObject;
     
     void OnDrawGizmosSelected()
-    {
-        // Gizmos.color = Color.yellow;
-        // Gizmos.DrawWireSphere(transform.position, effectionRadius);
-        
+    {      
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, OrbitRadius);
     }
@@ -65,7 +62,7 @@ public class Attractor : MonoBehaviour, IAttractor
     {
         Debug.Log($"Attaching satellite: {satellite}");
         Satellites.Add(satellite);
-        satellite.Attach(this);
+        satellite.AttachAttractor(this);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -88,7 +85,7 @@ public class Attractor : MonoBehaviour, IAttractor
         {
             Debug.Log("Exited orbit");
             satellite.IsOnOrbit = false;
-            satellite.Detach();
+            satellite.DetachAttractor();
             Satellites.Remove(satellite);
         }
     }

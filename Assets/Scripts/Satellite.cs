@@ -1,11 +1,6 @@
 using interfaces;
 using UnityEngine;
 
-static class Constants
-{
-    public static readonly float G = 9.81f;
-}
-
 public class Satellite : MonoBehaviour, ISatellite
 {
     public GameObject GameObject { get => gameObject; }
@@ -25,6 +20,7 @@ public class Satellite : MonoBehaviour, ISatellite
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+
         _initialLayer = gameObject.layer;
 
         _animationController = GetComponent<SatelliteAnimationController>();
@@ -38,7 +34,7 @@ public class Satellite : MonoBehaviour, ISatellite
         }
     }
 
-    public void Attach(IAttractor attractor)
+    public void AttachAttractor(IAttractor attractor)
     {
         CurrentAttractor = attractor;
         
@@ -52,7 +48,7 @@ public class Satellite : MonoBehaviour, ISatellite
         _animationController.SetSatellite();
     }   
 
-    public void Detach()
+    public void DetachAttractor()
     {
         CurrentAttractor = null;
 

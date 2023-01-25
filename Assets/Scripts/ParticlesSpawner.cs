@@ -17,18 +17,20 @@ public class ParticlesSpawner : NetworkBehaviour
     }
     #endregion  
 
+    [Header("Particle Spawner Settings")]
+
     public GameObject ParticlePrefab;
 
     [FormerlySerializedAs("CreatedMasses")] 
     public List<GameObject> CreatedParticles = new List<GameObject>();
 
     [FormerlySerializedAs("MaxMass")] 
-    public int MaxParticles = 50;
+    public int MaxParticlesCount = 50;
 
     [FormerlySerializedAs("TIME_TO_CREATE_MASS")] 
     public float TIME_TO_CREATE_PARTICLE = 0.5f;
 
-    public Vector2 pos;
+    public Vector2 CenterSpawnPosition;
 
     private GameObject ParentForParticles = null;
 
@@ -65,9 +67,9 @@ public class ParticlesSpawner : NetworkBehaviour
     {
         yield return new WaitForSecondsRealtime(TIME_TO_CREATE_PARTICLE);
 
-        if (CreatedParticles.Count < MaxParticles)
+        if (CreatedParticles.Count < MaxParticlesCount)
         {
-            Vector2 p = new Vector2(Random.Range(-pos.x, pos.x), Random.Range(-pos.y, pos.y));
+            Vector2 p = new Vector2(Random.Range(-CenterSpawnPosition.x, CenterSpawnPosition.x), Random.Range(-CenterSpawnPosition.y, CenterSpawnPosition.y));
             p /= 2;
 
             GameObject particleObject = Instantiate(ParticlePrefab, p, Quaternion.identity); // parent was removed to sync spawn over network correctly
@@ -79,25 +81,25 @@ public class ParticlesSpawner : NetworkBehaviour
         StartCoroutine(CreateMass());
     }
     
-    public void AddMass(GameObject m)
+    public void AddMass(GameObject mass)
     {
-        if (CreatedParticles.Contains(m) == false)
+        if (CreatedParticles.Contains(mass) == false)
         {
-            CreatedParticles.Add(m);
+            CreatedParticles.Add(mass);
         }
     }
     
-    public void RemoveMass(GameObject m)
+    public void RemoveMass(GameObject mass)
     {
-        if (CreatedParticles.Contains(m) == true)
+        if (CreatedParticles.Contains(mass) == true)
         {
-            CreatedParticles.Remove(m);
+            CreatedParticles.Remove(mass);
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, pos);
+        Gizmos.DrawWireCube(transform.position, CenterSpawnPosition);
     }
 }

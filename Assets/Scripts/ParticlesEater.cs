@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ParticlesEater : NetworkBehaviour
 {
+    [Header("Particle Eater Settings")]
     public float EatingSpaceScale = 0.32f;
 
     private float EatingRadius => transform.localScale.x * EatingSpaceScale;
@@ -38,13 +39,12 @@ public class ParticlesEater : NetworkBehaviour
 
         foreach (var particle in particlesToEat)
         {
-            Eat(particle);
+            EatParticle(particle);
         }
     }
 
-    private void Eat(GameObject particle)
+    private void EatParticle(GameObject particle)
     {
-        // Debug.Log($"[Eat] server: {isServer} | me: {isLocalPlayer} | scale: {transform.localScale.x}");
 
         DestroyParticle(particle); // call to server
         
